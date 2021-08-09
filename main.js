@@ -11,9 +11,20 @@ var app = http.createServer(function(request,response){
     if(pathname === '/'){
       if(queryData.id === undefined){
         
-        fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
+        fs.readdir('./data', function(error, filelist){
+          
           var title = 'Welcome';
           var description = 'Hello, Node.js'
+          var list = '<ul>';
+
+        var i = 0;
+        while(i < filelist.length){
+          list = list + `<li><a href="/?id=${filelist[i]}">${filelist[i]}</a></li>`;
+          i++;
+        }
+
+        list = list +'</ul>'
+
           var tempalet = `<!doctype html>
           <html>
           <head>
@@ -22,19 +33,31 @@ var app = http.createServer(function(request,response){
           </head>
           <body>
             <h1><a href="/">WEB</a></h1>
-            <ol>
-              <li><a href="/?id=html">HTML</a></li>
-              <li><a href="/?id=css">CSS</a></li>
-              <li><a href="/?id=javascript">JavaScript</a></li>
-            </ol>
+            ${list}
             <h2>${title}</h2>
             <p>${description}</p>
           </body>
           </html>`;
           response.writeHead(200);
           response.end(tempalet);
-        });
+        })
+        
+          
+        
       }else{
+        fs.readdir('./data', function(error, filelist){
+          
+          var title = 'Welcome';
+          var description = 'Hello, Node.js'
+          var list = '<ul>';
+
+        var i = 0;
+        while(i < filelist.length){
+          list = list + `<li><a href="/?id=${filelist[i]}">${filelist[i]}</a></li>`;
+          i++;
+        }
+
+        list = list +'</ul>'
         fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
           var title = queryData.id;
           var tempalet = `<!doctype html>
@@ -45,18 +68,15 @@ var app = http.createServer(function(request,response){
           </head>
           <body>
             <h1><a href="/">WEB</a></h1>
-            <ol>
-              <li><a href="/?id=html">HTML</a></li>
-              <li><a href="/?id=css">CSS</a></li>
-              <li><a href="/?id=javascript">JavaScript</a></li>
-            </ol>
+            ${list}
             <h2>${title}</h2>
             <p>${description}</p>
           </body>
           </html>`;
           response.writeHead(200);
           response.end(tempalet);
-        })
+        });
+      });
       }
     }else{
       response.writeHead(404);
